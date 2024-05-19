@@ -47,9 +47,15 @@ router.get('/auth/google/callback', function (req, res) {
 });
 
 router.get('/logout', (req, res) => {
-    req.app.locals.oAuth2Client.setCredentials(null);
-    req.app.locals.authed = false;
-    res.redirect('/glogin');
+    req.app.locals.oAuth2Client.revokeCredentials(function(err, result) {
+        if (err) {
+            console.error('Error revoking credentials:', err);
+        } else {
+            console.log('Credentials revoked successfully.');
+            authed = false;
+            res.redirect('/');
+        }
+    });
 });
 
 module.exports = router;
