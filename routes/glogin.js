@@ -42,7 +42,7 @@ router.get('/auth/google/callback', function (req, res) {
               console.log('Successfully authenticated');
               req.app.locals.oAuth2Client.setCredentials(tokens);
               req.app.locals.authed = true;
-              res.redirect('/');
+              res.redirect('/glogin');
           }
       });
   }
