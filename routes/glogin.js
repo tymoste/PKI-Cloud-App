@@ -42,7 +42,7 @@ router.get('/auth/google/callback', function (req, res) {
               console.log('Successfully authenticated');
               req.app.locals.oAuth2Client.setCredentials(tokens);
               req.app.locals.authed = true;
-              res.redirect('/glogin');
+              res.redirect('/');
           }
       });
   }
@@ -56,7 +56,12 @@ router.get('/logout', (req, res) => {
         } else {
             console.log('Credentials revoked successfully.');
             req.app.locals.authed = false; // Ustawienie authed na false po wylogowaniu
-            res.redirect('/');
+            
+            // Wyczyść sesję przeglądarki
+            req.session = null;
+            
+            // Wyślij żądanie do wylogowania się z Google
+            res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://pki-cloud-app.azurewebsites.net');
         }
     });
 });
