@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
         } else {
             const loggedUser = result.data.name;
             console.log(loggedUser);
-            res.send(`Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <a href="/logout"> Log me out </a>`);
+            res.send(`Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <a href="/glogin/logout"> Log me out </a>`);
         }
       });
   }
