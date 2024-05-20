@@ -64,7 +64,7 @@ router.get('/logout', (req, res) => {
             req.session = null;
             
             // Wyślij żądanie do wylogowania się z Google
-            res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://pki-cloud-app.azurewebsites.net');
+            res.redirect('/');
         }
     });
 });
