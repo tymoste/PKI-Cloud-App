@@ -19,7 +19,7 @@ router.get('/github/callback', (req, res) => {
       }
     }).then((response) => {
       access_token = response.data.access_token
-      res.redirect('/success');
+      res.redirect('/gitlogin/success');
     })
   })
 
