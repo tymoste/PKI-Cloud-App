@@ -5,7 +5,7 @@ const axios = require('axios')
 const gitClientId = 'Ov23liVDoUk6114fGsAy';
 const gitClientSecret = '3b98c6bf5b82dbe0ccef8b991b04222530a99e50';
 
-app.get('/github/callback', (req, res) => {
+router.get('/github/callback', (req, res) => {
 
     // The req.query object has the query params that were sent to this route.
     const requestToken = req.query.code
@@ -23,7 +23,7 @@ app.get('/github/callback', (req, res) => {
     })
   })
 
-  app.get('/success', function(req, res) {
+  router.get('/success', function(req, res) {
 
     axios({
       method: 'get',
@@ -35,3 +35,5 @@ app.get('/github/callback', (req, res) => {
       res.render('gitloginsuccess',{ userData: response.data });
     })
   });
+
+  module.exports = router;
