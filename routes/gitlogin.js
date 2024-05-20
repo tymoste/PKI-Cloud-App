@@ -12,7 +12,7 @@ router.get('/github/callback', (req, res) => {
     
     axios({
       method: 'post',
-      url: `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${requestToken}`,
+      url: `https://github.com/login/oauth/access_token?client_id=${gitClientId}&client_secret=${gitClientSecret}&code=${requestToken}`,
       // Set the content type header, so that we get the response in JSON
       headers: {
            accept: 'application/json'
