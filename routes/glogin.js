@@ -1,13 +1,14 @@
 const { google } = require('googleapis');
-const express = require('express');
-const { Client } = require("pg");
-const dotenv = require("dotenv");
-dotenv.config();
-const router = express.Router();
+var express = require('express');
+const { logging } = require('googleapis/build/src/apis/logging');
+const { Client } = require("pg")
+const dotenv = require("dotenv")
+dotenv.config()
+var router = express.Router();
 
 const gitClientId = 'Ov23liVDoUk6114fGsAy';
 const gitClientSecret = '3b98c6bf5b82dbe0ccef8b991b04222530a99e50';
-
+    
 /* GET home page. */
 router.get('/', async (req, res) => {
     if (!req.app.locals.authed) {
@@ -29,22 +30,18 @@ router.get('/', async (req, res) => {
                 const loggedUser = result.data.name;
                 console.log(loggedUser);
 
-                const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
-
                 const connectDB = async () => {
                     try {
                         const client = new Client({
                             host: PGHOST,
                             database: PGDATABASE,
-                            user: PGUSER,
+                            username: PGUSER,
                             password: PGPASSWORD,
                             port: 5432,
-                            ssl: {
-                                rejectUnauthorized: false // Ustawienie ssl jako "false" dla testów, zmień to na odpowiednią konfigurację w produkcji
-                            },
+                            ssl: 'require',
                             connection: {
-                                options: `project=${ENDPOINT_ID}`
-                              }
+                                options: `project=${ENDPOINT_ID}`,
+                            }
                         });
 
                         await client.connect();
@@ -53,7 +50,7 @@ router.get('/', async (req, res) => {
 
                         return result2.rows;
                     } catch (error) {
-                        console.error("Error connecting to PostgreSQL:", error);
+                        console.log(error);
                         return [];
                     }
                 };
@@ -70,22 +67,22 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/auth/google/callback', function (req, res) {
-    const code = req.query.code;
-    if (code) {
-        // Get an access token based on our OAuth code
-        req.app.locals.oAuth2Client.getToken(code, function (err, tokens) {
-            if (err) {
-                console.log('Error authenticating');
-                console.log(err);
-                res.send('Error during authentication');
-            } else {
-                console.log('Successfully authenticated');
-                req.app.locals.oAuth2Client.setCredentials(tokens);
-                req.app.locals.authed = true;
-                res.redirect('/glogin');
-            }
-        });
-    }
+  const code = req.query.code;
+  if (code) {
+      // Get an access token based on our OAuth code
+      req.app.locals.oAuth2Client.getToken(code, function (err, tokens) {
+          if (err) {
+              console.log('Error authenticating');
+              console.log(err);
+              res.send('Error during authentication');
+          } else {
+              console.log('Successfully authenticated');
+              req.app.locals.oAuth2Client.setCredentials(tokens);
+              req.app.locals.authed = true;
+              res.redirect('/glogin');
+          }
+      });
+  }
 });
 
 router.get('/logout', (req, res) => {
@@ -96,10 +93,10 @@ router.get('/logout', (req, res) => {
         } else {
             console.log('Credentials revoked successfully.');
             req.app.locals.authed = false; // Ustawienie authed na false po wylogowaniu
-
+            
             // Wyczyść sesję przeglądarki
             req.session = null;
-
+            
             // Wyślij żądanie do wylogowania się z Google
             res.redirect('/');
         }
