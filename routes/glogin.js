@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
                         });
 
                         await client.connect();
-                        const result2 = await client.query("SELECT * FROM users");
+                        const result2 = await client.query("SELECT * FROM public.users");
                         await client.end();
 
                         return result2.rows;
