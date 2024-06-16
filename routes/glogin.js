@@ -56,7 +56,8 @@ router.get('/', async (req, res) => {
 
                 try {
                     const queryResult = await connectDB();
-                    res.render("gitloginsuccess", { userData: result.data, queryResult: queryResult });
+                    // res.render("gitloginsuccess", { userData: result.data, queryResult: queryResult });
+                    res.send(queryResult)
                 } catch (error) {
                     res.send('Error retrieving data');
                 }
