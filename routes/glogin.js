@@ -49,6 +49,7 @@ router.get('/', (req, res) => {
                 }
                 res.render("gitloginsuccess", {userData:result.data, qureyResult: result2.rows})
             }
+            connectDB();
             // res.send(`Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <a href="/glogin/logout"> Log me out </a>`);
         }
       });
