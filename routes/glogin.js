@@ -1,11 +1,14 @@
 const { google } = require('googleapis');
 var express = require('express');
 const { logging } = require('googleapis/build/src/apis/logging');
+const { Client } = require("pg")
+const dotenv = require("dotenv")
+dotenv.config()
 var router = express.Router();
 
 const gitClientId = 'Ov23liVDoUk6114fGsAy';
 const gitClientSecret = '3b98c6bf5b82dbe0ccef8b991b04222530a99e50';
-
+    
 /* GET home page. */
 router.get('/', (req, res) => {
   if (!req.app.locals.authed) {
@@ -26,7 +29,28 @@ router.get('/', (req, res) => {
         } else {
             const loggedUser = result.data.name;
             console.log(loggedUser);
-            res.send(`Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <a href="/glogin/logout"> Log me out </a>`);
+
+            const connectDB = async() => {
+                try{
+                    const client = new Client({
+                        user: process.env.PGUSER,
+                        host: process.env.PGHOST,
+                        database: process.env.PGDATABASE,
+                        password: process.env.PGPASSWORD,
+                        port: process.env.PGPORT
+                    })
+            
+                    await client.connect()
+                    const result2 = await client.query("SELECT * FROM users")
+                    await client.end();
+            
+                }catch(error){
+                    console.log(error);
+                }
+            }
+
+            res.render("gitloginsuccess", {userData:result.data, qureyResult: result2.rows})
+            // res.send(`Logged in: ${loggedUser} <img src="${result.data.picture}" height="23" width="23"> <a href="/glogin/logout"> Log me out </a>`);
         }
       });
   }
